@@ -19,6 +19,10 @@ parser.add_argument('-s', '--site-name',
                     help='The site name to include in the output package file name ' + \
                     '(e.g. wordpress-x.x_efs_rds_[site-name]_xx.zip).',
                     required=True)
+parser.add_argument('-b', '--build-number',
+                    type=int,
+                    help="Set the starting build number.",
+                    default=1)
 
 args = parser.parse_args()
 
@@ -89,7 +93,7 @@ if not os.path.exists('{0}/wordpress'.format(script_dir)):
 # Final ElasticBeanstalk deployable zip archive
 #
 print "Generating ElasticBeanstalk deployable archive ..."
-build_number = 1
+build_number = args.build_number
 wordpress_zip_files = [f for f in listdir(script_dir) \
                        if isfile(join(script_dir, f)) and \
                        'wordpress' in f and '.zip' in f]
