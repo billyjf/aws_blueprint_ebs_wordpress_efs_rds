@@ -44,8 +44,6 @@ if not os.path.exists('{0}/wordpress'.format(script_dir)):
               '{0}/{1}'.format(script_dir, zip_filename))
 
     os.mkdir('wordpress/.ebextensions')
-    shutil.copy('.ebextensions/commands.config', 'wordpress/.ebextensions')
-    shutil.copy('wp-config.php', 'wordpress')
 
     #
     # Salt keys.config
@@ -88,6 +86,10 @@ if not os.path.exists('{0}/wordpress'.format(script_dir)):
                                salts['SECURE_AUTH_SALT'],
                                salts['LOGGED_IN_SALT'],
                                salts['NONCE_SALT']))
+
+# Files are always re-copied, per build
+shutil.copy('.ebextensions/commands.config', 'wordpress/.ebextensions')
+shutil.copy('wp-config.php', 'wordpress')
 
 #
 # Final ElasticBeanstalk deployable zip archive
