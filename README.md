@@ -5,6 +5,11 @@ Blueprint for Amazon Web Services (aws) to deploy the latest version of WordPres
 
 Prices assume sites are running 24 hours a day for the entire month.
 
+### Features
+
+1. Permalinks > Custom Structure supported by default.
+    * Apache mod_rewrite enabled by default (.htaccess included).
+
 ### Architecture
 
 #### TODO

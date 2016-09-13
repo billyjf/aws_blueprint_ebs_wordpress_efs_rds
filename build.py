@@ -90,6 +90,7 @@ if not os.path.exists('{0}/wordpress'.format(script_dir)):
 # Files are always re-copied, per build
 shutil.copy('.ebextensions/commands.config', 'wordpress/.ebextensions')
 shutil.copy('wp-config.php', 'wordpress')
+shutil.copy('.htaccess', 'wordpress')
 
 #
 # Final ElasticBeanstalk deployable zip archive
