@@ -45,47 +45,55 @@ if not os.path.exists('{0}/wordpress'.format(script_dir)):
 
     os.mkdir('wordpress/.ebextensions')
 
-    #
-    # Salt keys.config
-    #
-    print "Salting keys.config ..."
-    r = urllib2.urlopen('https://api.wordpress.org/secret-key/1.1/salt/')
-    salt = r.read()
+#
+# Salt keys.config
+#
+print "Salting keys.config ..."
+r = urllib2.urlopen('https://api.wordpress.org/secret-key/1.1/salt/')
+salt = r.read()
 
-    salts = {'AUTH_KEY': re.search("'AUTH_KEY', .*'(.*)'", salt).group(1),
-             'SECURE_AUTH_KEY': re.search("'SECURE_AUTH_KEY', .*'(.*)'", salt).group(1),
-             'LOGGED_IN_KEY': re.search("'LOGGED_IN_KEY', .*'(.*)'", salt).group(1),
-             'NONCE_KEY': re.search("'NONCE_KEY', .*'(.*)'", salt).group(1),
-             'AUTH_SALT': re.search("'AUTH_SALT', .*'(.*)'", salt).group(1),
-             'SECURE_AUTH_SALT': re.search("'SECURE_AUTH_SALT', .*'(.*)'", salt).group(1),
-             'LOGGED_IN_SALT': re.search("'LOGGED_IN_SALT', .*'(.*)'", salt).group(1),
-             'NONCE_SALT': re.search("'NONCE_SALT', .*'(.*)'", salt).group(1)}
+salts = {'AUTH_KEY': re.search("'AUTH_KEY', .*'(.*)'", salt).group(1),
+         'SECURE_AUTH_KEY': re.search("'SECURE_AUTH_KEY', .*'(.*)'", salt).group(1),
+         'LOGGED_IN_KEY': re.search("'LOGGED_IN_KEY', .*'(.*)'", salt).group(1),
+         'NONCE_KEY': re.search("'NONCE_KEY', .*'(.*)'", salt).group(1),
+         'AUTH_SALT': re.search("'AUTH_SALT', .*'(.*)'", salt).group(1),
+         'SECURE_AUTH_SALT': re.search("'SECURE_AUTH_SALT', .*'(.*)'", salt).group(1),
+         'LOGGED_IN_SALT': re.search("'LOGGED_IN_SALT', .*'(.*)'", salt).group(1),
+         'NONCE_SALT': re.search("'NONCE_SALT', .*'(.*)'", salt).group(1)}
 
-    with open('wordpress/.ebextensions/keys.config', 'w') as file:
-        file.write("""option settings:
-      - option name: AUTH_KEY
-        value: '{0}'
-      - option name: SECURE_AUTH_KEY
-        value: '{1}'
-      - option name: LOGGED_IN_KEY
-        value: '{2}'
-      - option name: NONCE_KEY
-        value: '{3}'
-      - option name: AUTH_SALT
-        value: '{4}'
-      - option name: SECURE_AUTH_SALT
-        value: '{5}'
-      - option name: LOGGED_IN_SALT
-        value: '{6}'
-      - option name: NONCE_SALT
-        value: '{7}'""".format(salts['AUTH_KEY'],
-                               salts['SECURE_AUTH_KEY'],
-                               salts['LOGGED_IN_KEY'],
-                               salts['NONCE_KEY'],
-                               salts['AUTH_SALT'],
-                               salts['SECURE_AUTH_SALT'],
-                               salts['LOGGED_IN_SALT'],
-                               salts['NONCE_SALT']))
+with open('wordpress/.ebextensions/keys.config', 'w') as file:
+    file.write("""option_settings:
+  - namespace: aws:elasticbeanstalk:application:environment
+    option_name: AUTH_KEY
+    value: '{0}'
+  - namespace: aws:elasticbeanstalk:application:environment
+    option_name: SECURE_AUTH_KEY
+    value: '{1}'
+  - namespace: aws:elasticbeanstalk:application:environment
+    option_name: LOGGED_IN_KEY
+    value: '{2}'
+  - namespace: aws:elasticbeanstalk:application:environment
+    option_name: NONCE_KEY
+    value: '{3}'
+  - namespace: aws:elasticbeanstalk:application:environment
+    option_name: AUTH_SALT
+    value: '{4}'
+  - namespace: aws:elasticbeanstalk:application:environment
+    option_name: SECURE_AUTH_SALT
+    value: '{5}'
+  - namespace: aws:elasticbeanstalk:application:environment
+    option_name: LOGGED_IN_SALT
+    value: '{6}'
+  - namespace: aws:elasticbeanstalk:application:environment
+    option_name: NONCE_SALT
+    value: '{7}'""".format(salts['AUTH_KEY'],
+                           salts['SECURE_AUTH_KEY'],
+                           salts['LOGGED_IN_KEY'],
+                           salts['NONCE_KEY'],
+                           salts['AUTH_SALT'],
+                           salts['SECURE_AUTH_SALT'],
+                           salts['LOGGED_IN_SALT'],
+                           salts['NONCE_SALT']).replace('`', '\`'))
 
 # Files are always re-copied, per build
 shutil.copy('.ebextensions/commands.config', 'wordpress/.ebextensions')
