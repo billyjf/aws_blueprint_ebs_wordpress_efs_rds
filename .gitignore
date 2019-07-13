@@ -1,2 +1,5 @@
 *.zip
 wordpress/*
+.idea
+# Elastic Beanstalk Files
+.elasticbeanstalk
