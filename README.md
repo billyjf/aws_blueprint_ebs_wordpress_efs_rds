@@ -18,7 +18,7 @@ Prices assume sites are running 24 hours a day for the entire month.
 ## Quick Start
 
 ### Building Deployable ElasticBeanstalk Packages
-./build.py --site_name "[YOUR SITE NAME]"
+./build.py --site-name "[YOUR SITE NAME]"
 
 Download wordpress, populate `keys.config` with new salts, 
 and generate an easily configurable ElasticBeanstalk package for managing 
