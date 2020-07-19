@@ -11,9 +11,7 @@ Prices assume sites are running 24 hours a day for the entire month.
     * Apache mod_rewrite enabled by default (.htaccess included).
 
 ### Architecture
-
-#### TODO
-[RDS_EFS_DIAGRAM]
+![architecture](docs/images/architecture.jpg)
 
 ## Quick Start
 
