@@ -1,0 +1,36 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: EB environments.
+Resources:
+  prod:
+    Type: AWS::ElasticBeanstalk::Environment
+    Properties:
+      ApplicationName: "My First Elastic Beanstalk Application"
+      EnvironmentName: "billyjf-6"
+      SolutionStackName: "64bit Amazon Linux 2018.03 v2.9.10 running PHP 7.3"
+      OptionSettings:
+        - Namespace: aws:elasticbeanstalk:environment
+          OptionName: EnvironmentType
+          Value: SingleInstance
+        - Namespace: aws:autoscaling:launchconfiguration
+          OptionName: IamInstanceProfile
+          Value: !Ref AppInstanceProfile
+        - Namespace: aws:elasticbeanstalk:application:environment
+          OptionName: PHP_UPLOAD_MAX_FILESIZE
+          Value: "12M"
+  AppRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: "wordpress"
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ec2.amazonaws.com
+            Action: sts:AssumeRole
+  AppInstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Path: /
+      Roles:
+      - !Ref AppRole

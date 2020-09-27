@@ -25,6 +25,9 @@ environment configs.
 
 ## References
 
+### Listing Available Solution Stacks (e.g. PHP)
+`aws elasticbeanstalk list-available-solution-stacks | jq '.SolutionStacks[] | select(contains("PHP"))'`
+
 ### AWS Monthly Cost Calculator
 <https://calculator.s3.amazonaws.com/index.html>
 
