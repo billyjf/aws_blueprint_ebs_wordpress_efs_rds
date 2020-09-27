@@ -1,0 +1,58 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Named rds-backup.
+Resources:
+  S3Bucket:
+    Type: "AWS::S3::Bucket"
+    Properties:
+      BucketName: "billyjf.backups.rds"
+  BackupRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: "backup-rds-to-s3"
+      Policies:
+        - PolicyName: "RDS"
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: "Allow"
+                Action:
+                  - "s3:ListBucket"
+                  - "s3:GetBucketLocation"
+                Resource: "arn:aws:s3:::*"
+              - Effect: "Allow"
+                Action:
+                  - "s3:PutObject"
+                  - "s3:GetObject"
+                  - "s3:DeleteObject"
+                Resource:
+                  - !Sub "${S3Bucket.Arn}"
+                  - !Sub "${S3Bucket.Arn}/*"
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: export.rds.amazonaws.com
+            Action: sts:AssumeRole
+  BackupKeyAlias:
+    Type: AWS::KMS::Alias
+    Properties:
+      AliasName: "alias/rds-backup-key"
+      TargetKeyId: !Ref BackupKey
+  BackupKey:
+    Type: AWS::KMS::Key
+    Properties:
+      Description: "RDS Backup Key"
+      Enabled: true
+      KeyPolicy:
+        Version: '2012-10-17'
+        Id: 'rds-backup-key'
+        Statement:
+          - Effect: Allow
+            Principal:
+              AWS: !Sub arn:aws:iam::${AWS::AccountId}:root
+            Action: "kms:*"
+            Resource: "*"
+      Tags:
+        - Key: "Name"
+          Value: "rds-backup-key"
