@@ -3,3 +3,4 @@ wordpress/*
 .idea
 # Elastic Beanstalk Files
 .elasticbeanstalk
+venv
