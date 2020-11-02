@@ -73,38 +73,15 @@ if __name__ == "__main__":
     wordpress_salts = get_wordpress_salts()
 
     with open('wordpress/.ebextensions/keys.config', 'w') as file:
-        file.write("""option_settings:
-      - namespace: aws:elasticbeanstalk:application:environment
-        option_name: AUTH_KEY
-        value: '{0}'
-      - namespace: aws:elasticbeanstalk:application:environment
-        option_name: SECURE_AUTH_KEY
-        value: '{1}'
-      - namespace: aws:elasticbeanstalk:application:environment
-        option_name: LOGGED_IN_KEY
-        value: '{2}'
-      - namespace: aws:elasticbeanstalk:application:environment
-        option_name: NONCE_KEY
-        value: '{3}'
-      - namespace: aws:elasticbeanstalk:application:environment
-        option_name: AUTH_SALT
-        value: '{4}'
-      - namespace: aws:elasticbeanstalk:application:environment
-        option_name: SECURE_AUTH_SALT
-        value: '{5}'
-      - namespace: aws:elasticbeanstalk:application:environment
-        option_name: LOGGED_IN_SALT
-        value: '{6}'
-      - namespace: aws:elasticbeanstalk:application:environment
-        option_name: NONCE_SALT
-        value: '{7}'""".format(wordpress_salts['AUTH_KEY'],
-                               wordpress_salts['SECURE_AUTH_KEY'],
-                               wordpress_salts['LOGGED_IN_KEY'],
-                               wordpress_salts['NONCE_KEY'],
-                               wordpress_salts['AUTH_SALT'],
-                               wordpress_salts['SECURE_AUTH_SALT'],
-                               wordpress_salts['LOGGED_IN_SALT'],
-                               wordpress_salts['NONCE_SALT']).replace('`', '\`'))
+        with open('.ebextensions/keys.config', 'r') as keys_template:
+            file.write(keys_template.read().format(wordpress_salts['AUTH_KEY'],
+                                                   wordpress_salts['SECURE_AUTH_KEY'],
+                                                   wordpress_salts['LOGGED_IN_KEY'],
+                                                   wordpress_salts['NONCE_KEY'],
+                                                   wordpress_salts['AUTH_SALT'],
+                                                   wordpress_salts['SECURE_AUTH_SALT'],
+                                                   wordpress_salts['LOGGED_IN_SALT'],
+                                                   wordpress_salts['NONCE_SALT']).replace('`', '\`'))
 
     # Files are always re-copied, per build
     shutil.copy('.ebextensions/commands.config', 'wordpress/.ebextensions')
