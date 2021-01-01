@@ -10,10 +10,7 @@ import re
 import shutil
 
 
-def write_keys_config(wordpress_salts):
-    """
-    :param wordpress_salts:
-    """
+def write_keys_config(wordpress_salts: dict):
     with open('wordpress/.ebextensions/keys.config', 'w') as keys_config:
         with open('.ebextensions/keys.config', 'r') as keys_template:
             keys_config.write(keys_template.read().format(wordpress_salts['AUTH_KEY'],
